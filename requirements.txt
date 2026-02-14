@@ -1,0 +1,11 @@
+# GUI Framework
+PyQt5==5.15.9
+
+# Image Processing Library
+opencv-python==4.9.0.80
+
+# Numerical Computation
+numpy==1.26.4
+
+# Build Tool (Optional - for creating EXE)
+pyinstaller==6.6.0
