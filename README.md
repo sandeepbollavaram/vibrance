@@ -199,7 +199,7 @@ This project demonstrates:
 AUTHOR DETAILS
 ------------------------------------------------------------
 
-Name: ______________________
+Name: Sandeep Kumar Bollavaram
 Course: B.Tech CSE
 Year: 2nd Year
 
