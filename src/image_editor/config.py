@@ -7,7 +7,7 @@ APP_NAME = "Vibrance"
 APP_TAGLINE = "Photo editor, batch processor, compressor."
 APP_ORG = "sandeepbollavaram"
 APP_ID = "vibrance"
-APP_GITHUB = "https://github.com/sandeepbollavaram/image_editor_python"
+APP_GITHUB = "https://github.com/sandeepbollavaram/vibrance"
 
 SUPPORTED_EXTS = (".jpg", ".jpeg", ".png", ".bmp", ".tiff", ".tif", ".webp")
 

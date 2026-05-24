@@ -13,7 +13,7 @@
 #define MyAppName        "Vibrance"
 #define MyAppVersion     "1.0.0"
 #define MyAppPublisher   "Sandeep Bollavaram"
-#define MyAppURL         "https://github.com/sandeepbollavaram/image_editor_python"
+#define MyAppURL         "https://github.com/sandeepbollavaram/vibrance"
 #define MyAppExeName     "Vibrance.exe"
 #define MyAppIcon        "src\image_editor\resources\app.ico"
 

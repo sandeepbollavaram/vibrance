@@ -74,7 +74,7 @@ def main() -> int:
 
     # Hero
     p.setPen(QColor("#5AB0FF"))
-    p.drawText(320, 470, "DOCS HERO  ·  https://sandeepbollavaram.github.io/image_editor_python/")
+    p.drawText(320, 470, "DOCS HERO  ·  https://sandeepbollavaram.github.io/vibrance/")
     hp = hero.scaled(W - 360, 220, Qt.KeepAspectRatio, Qt.SmoothTransformation)
     p.drawPixmap(320, 485, hp)
 

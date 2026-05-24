@@ -99,7 +99,7 @@ jobs:
           body: |
             ## Vibrance ${{ steps.ver.outputs.version }}
 
-            **One-click download:** https://sandeepbollavaram.github.io/image_editor_python/
+            **One-click download:** https://sandeepbollavaram.github.io/vibrance/
 
             ### Installation (Windows)
             1. Download `Vibrance_Setup_${{ steps.ver.outputs.version }}.exe` below.

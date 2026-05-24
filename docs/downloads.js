@@ -3,7 +3,7 @@
 //
 // If the API call fails (rate limit, no releases yet, offline), we leave the
 // fallback /releases/latest links in place — they still work.
-const REPO = "sandeepbollavaram/image_editor_python";
+const REPO = "sandeepbollavaram/vibrance";
 
 async function loadLatest() {
   try {

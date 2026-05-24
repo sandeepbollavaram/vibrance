@@ -30,7 +30,7 @@ def main() -> int:
         print(f"Missing: {', '.join(missing)}")
         return 1
     print("All docs assets present. Push to main and the pages.yml workflow will deploy.")
-    print(f"Site URL once deployed: https://sandeepbollavaram.github.io/image_editor_python/")
+    print(f"Site URL once deployed: https://sandeepbollavaram.github.io/vibrance/")
     return 0
 
 

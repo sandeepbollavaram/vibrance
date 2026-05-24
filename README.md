@@ -3,12 +3,12 @@
 > **Photo editor. Batch processor. Compressor.**
 > A production-grade desktop image editor built with **PySide6** and **OpenCV**.
 
-[![CI](https://github.com/sandeepbollavaram/image_editor_python/actions/workflows/ci.yml/badge.svg)](https://github.com/sandeepbollavaram/image_editor_python/actions/workflows/ci.yml)
-[![Release](https://img.shields.io/github/v/release/sandeepbollavaram/image_editor_python?label=download)](https://github.com/sandeepbollavaram/image_editor_python/releases/latest)
+[![CI](https://github.com/sandeepbollavaram/vibrance/actions/workflows/ci.yml/badge.svg)](https://github.com/sandeepbollavaram/vibrance/actions/workflows/ci.yml)
+[![Release](https://img.shields.io/github/v/release/sandeepbollavaram/vibrance?label=download)](https://github.com/sandeepbollavaram/vibrance/releases/latest)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
-**One-click download:** **<https://sandeepbollavaram.github.io/image_editor_python/>**
-**All releases:** <https://github.com/sandeepbollavaram/image_editor_python/releases>
+**One-click download:** **<https://sandeepbollavaram.github.io/vibrance/>**
+**All releases:** <https://github.com/sandeepbollavaram/vibrance/releases>
 
 ---
 
@@ -57,7 +57,7 @@
 
 ### Easiest — Windows installer
 
-1. Go to the [download center](https://sandeepbollavaram.github.io/image_editor_python/) or the [latest release](https://github.com/sandeepbollavaram/image_editor_python/releases/latest).
+1. Go to the [download center](https://sandeepbollavaram.github.io/vibrance/) or the [latest release](https://github.com/sandeepbollavaram/vibrance/releases/latest).
 2. Download `Vibrance_Setup_<version>.exe`.
 3. Run it. The installer:
    - Installs to `Program Files\Vibrance`
@@ -73,8 +73,8 @@ Grab `Vibrance.exe` from the release assets — single file, no install, no admi
 ### From source (macOS / Linux / development)
 
 ```powershell
-git clone https://github.com/sandeepbollavaram/image_editor_python.git
-cd image_editor_python
+git clone https://github.com/sandeepbollavaram/vibrance.git
+cd vibrance
 python -m venv .venv
 .venv\Scripts\activate
 pip install -r requirements.txt
@@ -96,7 +96,7 @@ sudo apt install -y libegl1 libxkbcommon0 libxcb-cursor0 libgl1
 ## Project layout
 
 ```
-image_editor_python/
+vibrance/
 ├── src/image_editor/
 │   ├── app.py                # QApplication bootstrap + theme
 │   ├── config.py             # EditParams, ExportOptions, paths
@@ -169,7 +169,7 @@ a GitHub Release, and uploads:
 - `Vibrance.exe` (portable)
 - `SHA256SUMS.txt`
 
-The download center at <https://sandeepbollavaram.github.io/image_editor_python/>
+The download center at <https://sandeepbollavaram.github.io/vibrance/>
 auto-detects the new release and rewrites its download buttons to point at the
 exact installer asset — no edits needed.
 
@@ -264,7 +264,7 @@ Inside Claude Code, in this repo:
 ```
 Use the Kairo MCP. Call kairo_session_start with agent="claude-code" and
 task="smoke test". Then call kairo_repo_intel. Then call kairo_record with
-kind="note" and item="kairo connected from image_editor_python".
+kind="note" and item="kairo connected from vibrance".
 ```
 
 You should see a session ID, a cached repo-intel summary, and a recorded note.
