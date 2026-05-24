@@ -1,17 +1,15 @@
 from __future__ import annotations
 
 from pathlib import Path
-from typing import Optional
 
 import cv2
 import numpy as np
-from PySide6.QtCore import QSettings, Qt, QTimer
+from PySide6.QtCore import QSettings, QTimer
 from PySide6.QtGui import QAction, QImage, QKeySequence, QPixmap, QShortcut
 from PySide6.QtWidgets import (
     QFileDialog,
     QFrame,
     QHBoxLayout,
-    QLabel,
     QMainWindow,
     QMessageBox,
     QStackedWidget,
@@ -31,7 +29,6 @@ from image_editor.config import (
 )
 from image_editor.core import History, load_image
 from image_editor.core.compress import save_compressed, strip_metadata
-from image_editor.core.filters import spot_heal
 from image_editor.core.image_io import resize_long_edge
 from image_editor.core.pipeline import process
 from image_editor.ui.widgets.batch_dialog import BatchDialog
@@ -66,9 +63,9 @@ class _CanvasArea(QFrame):
         self.setAcceptDrops(True)
         self._highlight = False
 
-    fileDropped = None   # bound by MainWindow
+    fileDropped = None  # bound by MainWindow
 
-    def dragEnterEvent(self, e):   # noqa: N802
+    def dragEnterEvent(self, e):  # noqa: N802
         if e.mimeData().hasUrls() and self._accept(e.mimeData().urls()):
             e.acceptProposedAction()
             self._highlight = True
@@ -78,11 +75,11 @@ class _CanvasArea(QFrame):
         else:
             e.ignore()
 
-    def dragLeaveEvent(self, e):   # noqa: N802
+    def dragLeaveEvent(self, e):  # noqa: N802
         self._highlight = False
         self.setStyleSheet("")
 
-    def dropEvent(self, e):   # noqa: N802
+    def dropEvent(self, e):  # noqa: N802
         self._highlight = False
         self.setStyleSheet("")
         for u in e.mimeData().urls():
@@ -114,16 +111,16 @@ class MainWindow(QMainWindow):
         self.setAcceptDrops(True)
 
         self.log = get_logger()
-        self.history = History()    # internal undo/redo — no visible panel
+        self.history = History()  # internal undo/redo — no visible panel
         self._settings = QSettings(APP_ORG, APP_ID)
         self._recent: list[str] = self._load_recent()
 
-        self._current_image: Optional[np.ndarray] = None
-        self._current_path: Optional[str] = None
-        self._preview_image: Optional[np.ndarray] = None
-        self._compare_window: Optional[SplitCompareWidget] = None
-        self._worker: Optional[BatchEditWorker] = None
-        self._batch_dialog: Optional[BatchDialog] = None
+        self._current_image: np.ndarray | None = None
+        self._current_path: str | None = None
+        self._preview_image: np.ndarray | None = None
+        self._compare_window: SplitCompareWidget | None = None
+        self._worker: BatchEditWorker | None = None
+        self._batch_dialog: BatchDialog | None = None
 
         self._build_ui()
         self._build_menu()
@@ -206,8 +203,8 @@ class MainWindow(QMainWindow):
         self.compressor_panel.cancelBatchRequested.connect(self._compress_batch_cancel)
 
         self.right_stack = QStackedWidget()
-        self.right_stack.addWidget(self.edit_panel)         # 0
-        self.right_stack.addWidget(self.compressor_panel)   # 1
+        self.right_stack.addWidget(self.edit_panel)  # 0
+        self.right_stack.addWidget(self.compressor_panel)  # 1
         root.addWidget(self.right_stack, 0)
 
         self.setStatusBar(QStatusBar())
@@ -298,7 +295,7 @@ class MainWindow(QMainWindow):
                 self.edit_panel.goto_tab(0)
             elif tool == "filters":
                 self.edit_panel.goto_tab(1)
-            else:                                          # export
+            else:  # export
                 self.edit_panel.goto_tab(3)
             return
 
@@ -334,7 +331,9 @@ class MainWindow(QMainWindow):
     # ----- image lifecycle --------------------------------------------
     def _action_open(self) -> None:
         path, _ = QFileDialog.getOpenFileName(
-            self, "Open image", "",
+            self,
+            "Open image",
+            "",
             "Images (*.jpg *.jpeg *.png *.bmp *.webp *.tif *.tiff)",
         )
         if path:
@@ -351,14 +350,12 @@ class MainWindow(QMainWindow):
         self._current_path = path
         self.history.reset()
         self.edit_panel.set_params(EditParams())
-        self.canvas_stack.setCurrentIndex(1)        # show preview
+        self.canvas_stack.setCurrentIndex(1)  # show preview
         self._render_preview(force=True)
         self._thumb_timer.start(self.THUMB_DEBOUNCE_MS)
         self._push_recent(path)
         show_toast(self, f"Loaded {Path(path).name}", kind="info", duration_ms=1800)
-        self.statusBar().showMessage(
-            f"{Path(path).name}  ·  {img.shape[1]}×{img.shape[0]}"
-        )
+        self.statusBar().showMessage(f"{Path(path).name}  ·  {img.shape[1]}×{img.shape[0]}")
 
     def _on_params_changed(self, _p: EditParams) -> None:
         self._preview_timer.start(self.PREVIEW_DEBOUNCE_MS)
@@ -420,7 +417,7 @@ class MainWindow(QMainWindow):
         if not rect:
             return
         x, y, w, h = rect
-        self._current_image = self._current_image[y:y + h, x:x + w].copy()
+        self._current_image = self._current_image[y : y + h, x : x + w].copy()
         self._render_preview(force=True)
         self._thumb_timer.start(self.THUMB_DEBOUNCE_MS)
 
@@ -441,7 +438,9 @@ class MainWindow(QMainWindow):
             show_toast(self, "Nothing to save.", kind="error")
             return
         path, _ = QFileDialog.getSaveFileName(
-            self, "Save image as", self._suggest_name("jpg"),
+            self,
+            "Save image as",
+            self._suggest_name("jpg"),
             "JPEG (*.jpg);;PNG (*.png);;WebP (*.webp);;TIFF (*.tif)",
         )
         if not path:
@@ -463,7 +462,9 @@ class MainWindow(QMainWindow):
 
     def _save_as(self, settings) -> None:
         path, _ = QFileDialog.getSaveFileName(
-            self, "Save image as", self._suggest_name(settings.fmt),
+            self,
+            "Save image as",
+            self._suggest_name(settings.fmt),
             f"{settings.fmt.upper()} (*.{settings.fmt})",
         )
         if path:
@@ -533,8 +534,11 @@ class MainWindow(QMainWindow):
         self._worker.error.connect(lambda *_: self._inc_fail())
         self._worker.start()
 
-    def _inc_ok(self) -> None:  self._ok_count += 1
-    def _inc_fail(self) -> None: self._fail_count += 1
+    def _inc_ok(self) -> None:
+        self._ok_count += 1
+
+    def _inc_fail(self) -> None:
+        self._fail_count += 1
 
     def _on_batch_progress(self, pct: int) -> None:
         if self._batch_dialog is not None:
@@ -543,8 +547,11 @@ class MainWindow(QMainWindow):
     def _on_batch_finished(self) -> None:
         if self._batch_dialog is not None:
             self._batch_dialog.finished(self._ok_count, self._fail_count)
-        show_toast(self, f"Batch done: {self._ok_count} ok, {self._fail_count} failed",
-                   kind="error" if self._fail_count else "info")
+        show_toast(
+            self,
+            f"Batch done: {self._ok_count} ok, {self._fail_count} failed",
+            kind="error" if self._fail_count else "info",
+        )
         self._worker = None
 
     def _cancel_batch(self) -> None:
@@ -559,14 +566,14 @@ class MainWindow(QMainWindow):
             show_toast(self, "Open an image first.", kind="error")
             return
         from image_editor.core.compress import compress_quality, compress_to_size
+
         try:
             img = self._resize_for_compress(self._preview_image, req)
             if req.target_kb > 0:
                 r = compress_to_size(img, target_kb=req.target_kb, fmt=req.fmt)
             else:
                 r = compress_quality(img, fmt=req.fmt, quality=req.quality)
-            src_kb = (Path(self._current_path).stat().st_size / 1024.0
-                      if self._current_path else 0.0)
+            src_kb = Path(self._current_path).stat().st_size / 1024.0 if self._current_path else 0.0
             text = f"Estimated: {r.size_kb:.1f} KB · q={r.quality_used} · {r.width}×{r.height}"
             if src_kb > 0:
                 pct = max(0.0, (1 - r.size_kb / src_kb) * 100)
@@ -583,7 +590,9 @@ class MainWindow(QMainWindow):
             return
         import cv2
         import numpy as np
+
         from image_editor.core.compress import compress_quality, compress_to_size
+
         try:
             img = self._resize_for_compress(self._preview_image, req)
             if req.target_kb > 0:
@@ -610,7 +619,9 @@ class MainWindow(QMainWindow):
             return
         suggested = self._suggest_name(req.fmt)
         path, _ = QFileDialog.getSaveFileName(
-            self, "Save compressed image", suggested,
+            self,
+            "Save compressed image",
+            suggested,
             f"{req.fmt.upper()} (*.{req.fmt})",
         )
         if not path:
@@ -618,26 +629,24 @@ class MainWindow(QMainWindow):
         # Refuse silent overwrite of the source file
         if self._current_path and Path(path).resolve() == Path(self._current_path).resolve():
             box = QMessageBox.question(
-                self, "Overwrite original?",
+                self,
+                "Overwrite original?",
                 "This will overwrite your original file. Continue?",
                 QMessageBox.Yes | QMessageBox.No,
             )
             if box != QMessageBox.Yes:
                 return
         from image_editor.core.compress import save_compressed
+
         try:
             img = self._resize_for_compress(self._preview_image, req)
             target = req.target_kb if req.target_kb > 0 else None
-            r = save_compressed(path, img,
-                                target_kb=target, quality=req.quality, fmt=req.fmt)
+            r = save_compressed(path, img, target_kb=target, quality=req.quality, fmt=req.fmt)
             if req.strip_metadata:
                 strip_metadata(path)
-            src_kb = (Path(self._current_path).stat().st_size / 1024.0
-                      if self._current_path else 0.0)
-            text = (
-                f"Saved {Path(path).name}  ·  {r.size_kb:.1f} KB"
-                + (f"  ·  {(1 - r.size_kb / src_kb) * 100:.0f}% smaller"
-                   if src_kb > 0 else "")
+            src_kb = Path(self._current_path).stat().st_size / 1024.0 if self._current_path else 0.0
+            text = f"Saved {Path(path).name}  ·  {r.size_kb:.1f} KB" + (
+                f"  ·  {(1 - r.size_kb / src_kb) * 100:.0f}% smaller" if src_kb > 0 else ""
             )
             self.compressor_panel.set_single_result(text)
             show_toast(self, text)
@@ -654,8 +663,11 @@ class MainWindow(QMainWindow):
             show_toast(self, "Pick an input folder first.", kind="error")
             self.compressor_panel.set_batch_summary("Pick a valid input folder.")
             return
-        files = [str(p) for p in Path(req.in_dir).iterdir()
-                 if p.is_file() and p.suffix.lower() in SUPPORTED_EXTS]
+        files = [
+            str(p)
+            for p in Path(req.in_dir).iterdir()
+            if p.is_file() and p.suffix.lower() in SUPPORTED_EXTS
+        ]
         if not files:
             show_toast(self, "No supported images found in folder.", kind="error")
             self.compressor_panel.set_batch_summary("No images found.")
@@ -663,7 +675,8 @@ class MainWindow(QMainWindow):
         out_dir = req.out_dir or str(Path(req.in_dir) / "compressed")
         if Path(out_dir).resolve() == Path(req.in_dir).resolve():
             box = QMessageBox.question(
-                self, "Same folder?",
+                self,
+                "Same folder?",
                 "Output folder is the same as input. Continue (files are renamed)?",
                 QMessageBox.Yes | QMessageBox.No,
             )
@@ -671,9 +684,12 @@ class MainWindow(QMainWindow):
                 return
 
         self._compress_worker = BatchCompressWorker(
-            files=files, out_dir=out_dir,
-            fmt=req.fmt, quality=req.quality,
-            target_kb=req.target_kb, long_edge=req.long_edge,
+            files=files,
+            out_dir=out_dir,
+            fmt=req.fmt,
+            quality=req.quality,
+            target_kb=req.target_kb,
+            long_edge=req.long_edge,
             strip_meta=req.strip_metadata,
         )
         self._compress_worker.progress.connect(self.compressor_panel.set_batch_progress)
@@ -682,8 +698,7 @@ class MainWindow(QMainWindow):
 
     def _on_compress_batch_done(self, ok: int, fail: int, saved_kb: float) -> None:
         summary = (
-            f"Done · {ok} succeeded · {fail} failed"
-            f"  ·  saved {saved_kb / 1024:.1f} MB total"
+            f"Done · {ok} succeeded · {fail} failed" f"  ·  saved {saved_kb / 1024:.1f} MB total"
         )
         self.compressor_panel.set_batch_summary(summary)
         show_toast(self, summary, kind="error" if fail else "info")
@@ -711,12 +726,13 @@ class MainWindow(QMainWindow):
     def _apply_zoom(self, zoom: float) -> None:
         self.preview_view.resetTransform()
         self.preview_view.scale(zoom, zoom)
-        self.preview_view._scale = zoom   # noqa: SLF001
+        self.preview_view._scale = zoom  # noqa: SLF001
 
     # ----- help -------------------------------------------------------
     def _show_shortcuts(self) -> None:
         QMessageBox.information(
-            self, "Keyboard Shortcuts",
+            self,
+            "Keyboard Shortcuts",
             "<b>File</b><br/>"
             "Ctrl+O — Open<br/>"
             "Ctrl+S — Save<br/>"
@@ -731,13 +747,15 @@ class MainWindow(QMainWindow):
             "<br/><b>View</b><br/>"
             "Ctrl+0 — Fit<br/>"
             "Ctrl+1 — Actual size<br/>"
-            "Ctrl+/ — Compare before/after"
+            "Ctrl+/ — Compare before/after",
         )
 
     def _about(self) -> None:
         from image_editor import __version__
+
         QMessageBox.about(
-            self, f"About {APP_NAME}",
+            self,
+            f"About {APP_NAME}",
             f"<h3>{APP_NAME}</h3>"
             f"<p>Version {__version__}  ·  fully offline</p>"
             "<p>Photo editor, batch processor, compressor.<br/>"
@@ -746,11 +764,11 @@ class MainWindow(QMainWindow):
         )
 
     # ----- drag & drop on the whole window -----------------------------
-    def dragEnterEvent(self, e):   # noqa: N802
+    def dragEnterEvent(self, e):  # noqa: N802
         if e.mimeData().hasUrls():
             e.acceptProposedAction()
 
-    def dropEvent(self, e):   # noqa: N802
+    def dropEvent(self, e):  # noqa: N802
         for u in e.mimeData().urls():
             p = Path(u.toLocalFile())
             if p.is_file() and p.suffix.lower() in SUPPORTED_EXTS:

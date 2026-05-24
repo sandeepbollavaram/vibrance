@@ -50,9 +50,7 @@ class SliderRow(QWidget):
         header.setSpacing(6)
 
         self._label = QLabel(label)
-        self._label.setStyleSheet(
-            "background: transparent; color: #C9D2E0; font-size: 12px;"
-        )
+        self._label.setStyleSheet("background: transparent; color: #C9D2E0; font-size: 12px;")
         self._label.setAttribute(Qt.WA_TranslucentBackground)
 
         self._value = QLabel(str(default))

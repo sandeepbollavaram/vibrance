@@ -3,6 +3,7 @@
 Emits per-file events so the UI can update a progress bar / log without
 freezing. The MainWindow owns the worker; this module is pure mechanics.
 """
+
 from __future__ import annotations
 
 from pathlib import Path
@@ -13,10 +14,10 @@ from image_editor.core.compress import save_compressed, strip_metadata
 
 
 class BatchCompressWorker(QThread):
-    progress = Signal(int)            # 0..100
-    fileDone = Signal(str, str, float)   # src_path, dst_path, kb_saved
-    error = Signal(str, str)             # src_path, message
-    finishedSummary = Signal(int, int, float)   # ok, fail, total_kb_saved
+    progress = Signal(int)  # 0..100
+    fileDone = Signal(str, str, float)  # src_path, dst_path, kb_saved
+    error = Signal(str, str)  # src_path, message
+    finishedSummary = Signal(int, int, float)  # ok, fail, total_kb_saved
 
     def __init__(
         self,
@@ -68,7 +69,8 @@ class BatchCompressWorker(QThread):
 
                 target = self.target_kb if self.target_kb > 0 else None
                 result = save_compressed(
-                    dst, img,
+                    dst,
+                    img,
                     target_kb=target,
                     quality=self.quality,
                     fmt=fmt,

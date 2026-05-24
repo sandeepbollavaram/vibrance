@@ -20,18 +20,17 @@ from PySide6.QtWidgets import (
     QRadioButton,
     QSpinBox,
     QVBoxLayout,
-    QWidget,
 )
 
 
 @dataclass
 class ExportRequest:
     out_path: str
-    fmt: str                   # jpg | png | webp
-    mode: str                  # "quality" | "target_size"
-    quality: int               # 1..100 (quality mode)
-    target_kb: float           # KB ceiling (target_size mode)
-    max_long_edge: int         # 0 = no resize
+    fmt: str  # jpg | png | webp
+    mode: str  # "quality" | "target_size"
+    quality: int  # 1..100 (quality mode)
+    target_kb: float  # KB ceiling (target_size mode)
+    max_long_edge: int  # 0 = no resize
     strip_metadata: bool
 
 

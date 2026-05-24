@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from PySide6.QtCore import Qt, Signal
+from PySide6.QtCore import Signal
 from PySide6.QtWidgets import (
     QAbstractItemView,
     QComboBox,
@@ -96,9 +96,7 @@ class FilePanel(QFrame):
         self.list.clear()
         ext_text = self.ext_combo.currentText().lower()
         allowed = SUPPORTED_EXTS if ext_text == "all images" else (f".{ext_text}",)
-        files = sorted(
-            p.name for p in Path(folder).iterdir() if p.suffix.lower() in allowed
-        )
+        files = sorted(p.name for p in Path(folder).iterdir() if p.suffix.lower() in allowed)
         for f in files:
             self.list.addItem(f)
         self.count_label.setText(f"{len(files)} file(s)")

@@ -2,9 +2,8 @@ from __future__ import annotations
 
 from importlib import resources
 
-from PySide6.QtGui import QPalette, QColor
+from PySide6.QtGui import QColor, QPalette
 from PySide6.QtWidgets import QApplication
-
 
 ACCENT = "#5AB0FF"
 BG = "#0F1115"
@@ -35,8 +34,10 @@ def apply_dark_theme(app: QApplication) -> None:
     app.setPalette(pal)
 
     try:
-        qss = resources.files("image_editor.resources").joinpath("styles.qss").read_text(
-            encoding="utf-8"
+        qss = (
+            resources.files("image_editor.resources")
+            .joinpath("styles.qss")
+            .read_text(encoding="utf-8")
         )
         app.setStyleSheet(qss)
     except (FileNotFoundError, ModuleNotFoundError):

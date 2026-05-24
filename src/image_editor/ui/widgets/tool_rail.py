@@ -19,15 +19,15 @@ class ToolRail(QFrame):
     toolChanged = Signal(str)
 
     TOOLS = [
-        ("open",       "Open",       "Open image (Ctrl+O)"),
-        ("crop",       "Crop",       "Crop"),
-        ("adjust",     "Adjust",     "Adjustments"),
-        ("filters",    "Filters",    "Color & filter presets"),
-        ("batch",      "Batch",      "Batch processing (Ctrl+B)"),
-        ("compressor", "Compress",   "File compressor"),
-        ("compare",    "Compare",    "Before / after (Ctrl+/)"),
-        ("export",     "Export",     "Export / save (Ctrl+E)"),
-        ("help",       "Help",       "Keyboard shortcuts & About"),
+        ("open", "Open", "Open image (Ctrl+O)"),
+        ("crop", "Crop", "Crop"),
+        ("adjust", "Adjust", "Adjustments"),
+        ("filters", "Filters", "Color & filter presets"),
+        ("batch", "Batch", "Batch processing (Ctrl+B)"),
+        ("compressor", "Compress", "File compressor"),
+        ("compare", "Compare", "Before / after (Ctrl+/)"),
+        ("export", "Export", "Export / save (Ctrl+E)"),
+        ("help", "Help", "Keyboard shortcuts & About"),
     ]
 
     ICON_SIZE = QSize(20, 20)
@@ -53,7 +53,7 @@ class ToolRail(QFrame):
             btn.setIconSize(self.ICON_SIZE)
             btn.setToolButtonStyle(Qt.ToolButtonTextUnderIcon)
             btn.setCheckable(True)
-            btn.setAutoExclusive(False)        # we manage via QButtonGroup
+            btn.setAutoExclusive(False)  # we manage via QButtonGroup
             btn.setToolTip(tooltip)
             btn.setCursor(Qt.PointingHandCursor)
             btn.setMinimumHeight(54)

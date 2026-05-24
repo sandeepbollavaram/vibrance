@@ -20,6 +20,7 @@ class HistogramWidget(QWidget):
             self._hist = None
         else:
             from image_editor.core.filters import histogram
+
             self._hist = histogram(bgr)
         self.update()
 

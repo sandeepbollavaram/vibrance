@@ -11,9 +11,9 @@ def _photo(h=400, w=600):
     needs to be photo-like for size-target tests to be meaningful.
     """
     yy, xx = np.mgrid[0:h, 0:w].astype(np.float32)
-    b = (xx / w * 200 + 30)
-    g = (np.sin(yy / 30.0) * 60 + 130)
-    r = (yy / h * 220 + 20)
+    b = xx / w * 200 + 30
+    g = np.sin(yy / 30.0) * 60 + 130
+    r = yy / h * 220 + 20
     img = np.dstack([b, g, r])
     rng = np.random.default_rng(42)
     img = img + rng.normal(0, 5, img.shape)

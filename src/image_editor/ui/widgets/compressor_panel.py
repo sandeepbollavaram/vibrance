@@ -27,18 +27,18 @@ from image_editor.config import APP_NAME, APP_TAGLINE
 from image_editor.ui.widgets.section_card import SectionCard
 from image_editor.ui.widgets.slider_row import SliderRow
 
-
 # --------- request payloads ------------------------------------------
 
 
 @dataclass
 class CompressRequest:
     """Settings for compressing the current preview image."""
-    fmt: str                 # jpg | png | webp
-    quality: int             # 1..100
-    target_kb: float         # 0 = no target
-    resize_width: int        # 0 = keep
-    resize_height: int       # 0 = keep
+
+    fmt: str  # jpg | png | webp
+    quality: int  # 1..100
+    target_kb: float  # 0 = no target
+    resize_width: int  # 0 = keep
+    resize_height: int  # 0 = keep
     keep_aspect: bool
     strip_metadata: bool
 
@@ -50,7 +50,7 @@ class BatchCompressRequest:
     fmt: str
     quality: int
     target_kb: float
-    long_edge: int           # 0 = keep
+    long_edge: int  # 0 = keep
     strip_metadata: bool
 
 
@@ -67,10 +67,10 @@ class CompressorPanel(QFrame):
     and surfaces progress/result strings.
     """
 
-    estimateRequested = Signal(object)        # CompressRequest
+    estimateRequested = Signal(object)  # CompressRequest
     previewRequested = Signal(object)
     saveCurrentRequested = Signal(object)
-    batchRequested = Signal(object)           # BatchCompressRequest
+    batchRequested = Signal(object)  # BatchCompressRequest
     cancelBatchRequested = Signal()
 
     def __init__(self, parent=None):
@@ -93,9 +93,7 @@ class CompressorPanel(QFrame):
 
         # --- Title row ---
         title = QLabel("Compressor")
-        title.setStyleSheet(
-            "color:#FFFFFF; font-size:16px; font-weight:600; padding-top:4px;"
-        )
+        title.setStyleSheet("color:#FFFFFF; font-size:16px; font-weight:600; padding-top:4px;")
         root.addWidget(title)
 
         # --- Mode toggle ---
@@ -166,9 +164,7 @@ class CompressorPanel(QFrame):
         self.btn_estimate.clicked.connect(
             lambda: self.estimateRequested.emit(self.current_request())
         )
-        self.btn_preview.clicked.connect(
-            lambda: self.previewRequested.emit(self.current_request())
-        )
+        self.btn_preview.clicked.connect(lambda: self.previewRequested.emit(self.current_request()))
         self.btn_save_compressed.clicked.connect(
             lambda: self.saveCurrentRequested.emit(self.current_request())
         )
@@ -217,8 +213,10 @@ class CompressorPanel(QFrame):
         tr.addWidget(self.s_target, 1)
         tr.addWidget(self.s_unit)
         tgt_card.add_layout(tr)
-        hint2 = QLabel("Vibrance binary-searches the encoder quality "
-                       "until the output is at or just under your target.")
+        hint2 = QLabel(
+            "Vibrance binary-searches the encoder quality "
+            "until the output is at or just under your target."
+        )
         hint2.setProperty("role", "caption")
         hint2.setWordWrap(True)
         tgt_card.add(hint2)
@@ -256,9 +254,7 @@ class CompressorPanel(QFrame):
 
         # Result
         self.result_label = QLabel("")
-        self.result_label.setStyleSheet(
-            "color:#5AB0FF; font-weight:600; padding:4px 0;"
-        )
+        self.result_label.setStyleSheet("color:#5AB0FF; font-weight:600; padding:4px 0;")
         self.result_label.setWordWrap(True)
         outer.addWidget(self.result_label)
 
@@ -272,8 +268,10 @@ class CompressorPanel(QFrame):
         outer.setContentsMargins(0, 0, 0, 0)
         outer.setSpacing(10)
 
-        hint = QLabel("Compress every image in a folder. Originals are never "
-                      "overwritten — output goes to the folder you choose.")
+        hint = QLabel(
+            "Compress every image in a folder. Originals are never "
+            "overwritten — output goes to the folder you choose."
+        )
         hint.setProperty("role", "caption")
         hint.setWordWrap(True)
         outer.addWidget(hint)
@@ -392,12 +390,12 @@ class CompressorPanel(QFrame):
 
     def _update_count(self) -> None:
         from image_editor.config import SUPPORTED_EXTS
+
         folder = Path(self.b_in.text().strip())
         if not folder.is_dir():
             self.count_label.setText("")
             return
-        files = [p for p in folder.iterdir()
-                 if p.is_file() and p.suffix.lower() in SUPPORTED_EXTS]
+        files = [p for p in folder.iterdir() if p.is_file() and p.suffix.lower() in SUPPORTED_EXTS]
         self.count_label.setText(
             f"{len(files)} image(s) found" if files else "No images found in folder"
         )

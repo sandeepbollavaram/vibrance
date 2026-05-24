@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from PySide6.QtCore import Qt, Signal
+from PySide6.QtCore import Signal
 from PySide6.QtWidgets import (
     QCheckBox,
     QComboBox,
@@ -135,8 +135,7 @@ class BatchDialog(QDialog):
         if not folder.is_dir():
             return []
         return sorted(
-            p for p in folder.iterdir()
-            if p.is_file() and p.suffix.lower() in SUPPORTED_EXTS
+            p for p in folder.iterdir() if p.is_file() and p.suffix.lower() in SUPPORTED_EXTS
         )
 
     def _update_count(self) -> None:
@@ -153,15 +152,17 @@ class BatchDialog(QDialog):
             return
         self.progress.show()
         self.btn_run.setEnabled(False)
-        self.runRequested.emit({
-            "files": [str(p) for p in files],
-            "out_dir": self.out_edit.text().strip(),
-            "fmt": self.fmt.currentText(),
-            "quality": self.quality.value(),
-            "long_edge": self.long_edge.value(),
-            "strip_metadata": self.strip.isChecked(),
-            "params": self._params,
-        })
+        self.runRequested.emit(
+            {
+                "files": [str(p) for p in files],
+                "out_dir": self.out_edit.text().strip(),
+                "fmt": self.fmt.currentText(),
+                "quality": self.quality.value(),
+                "long_edge": self.long_edge.value(),
+                "strip_metadata": self.strip.isChecked(),
+                "params": self._params,
+            }
+        )
 
     def _cancel(self) -> None:
         self.cancelRequested.emit()

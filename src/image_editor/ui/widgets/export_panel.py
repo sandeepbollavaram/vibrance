@@ -21,10 +21,10 @@ from image_editor.ui.widgets.slider_row import SliderRow
 
 @dataclass
 class ExportSettings:
-    fmt: str = "jpg"               # jpg | png | webp
-    quality: int = 90              # 1..100
-    resize_width: int = 0          # 0 = keep
-    resize_height: int = 0         # 0 = keep
+    fmt: str = "jpg"  # jpg | png | webp
+    quality: int = 90  # 1..100
+    resize_width: int = 0  # 0 = keep
+    resize_height: int = 0  # 0 = keep
     keep_aspect: bool = True
     strip_metadata: bool = True
 
@@ -33,7 +33,7 @@ class ExportPanel(QWidget):
     """Export tab body. Pure settings widget — emits requests; the
     MainWindow performs the actual file dialog + save."""
 
-    saveCurrentRequested = Signal(object)   # ExportSettings
+    saveCurrentRequested = Signal(object)  # ExportSettings
     saveAsRequested = Signal(object)
     batchExportRequested = Signal(object)
 

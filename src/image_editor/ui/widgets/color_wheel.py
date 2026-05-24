@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import math
 
-from PySide6.QtCore import QPoint, QPointF, QRect, Qt, Signal
+from PySide6.QtCore import QPointF, QRect, Qt, Signal
 from PySide6.QtGui import (
     QBrush,
     QColor,
@@ -23,9 +23,9 @@ class ColorWheel(QWidget):
     puck represents the offset that callers feed into ``filters.color_grade``.
     """
 
-    valueChanged = Signal(float, float)   # dx, dy
+    valueChanged = Signal(float, float)  # dx, dy
 
-    MAX_RADIUS = 0.5    # UI cap — large grades look ugly
+    MAX_RADIUS = 0.5  # UI cap — large grades look ugly
 
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -124,7 +124,7 @@ class ColorWheel(QWidget):
 class ColorWheelTriad(QFrame):
     """Three labeled wheels (Shadows / Midtones / Highlights) arranged in a row."""
 
-    valuesChanged = Signal(tuple, tuple, tuple)    # sh, mid, hi (each dx,dy)
+    valuesChanged = Signal(tuple, tuple, tuple)  # sh, mid, hi (each dx,dy)
 
     def __init__(self, parent=None):
         super().__init__(parent)

@@ -4,7 +4,6 @@ from PySide6.QtCore import QSize, Qt, Signal
 from PySide6.QtGui import QImage, QPixmap
 from PySide6.QtWidgets import (
     QFrame,
-    QHBoxLayout,
     QLabel,
     QListWidget,
     QListWidgetItem,
@@ -14,6 +13,7 @@ from PySide6.QtWidgets import (
 
 def _bgr_to_pix(bgr) -> QPixmap:
     import cv2
+
     rgb = cv2.cvtColor(bgr, cv2.COLOR_BGR2RGB)
     h, w, ch = rgb.shape
     img = QImage(rgb.data, w, h, ch * w, QImage.Format_RGB888).copy()
@@ -23,7 +23,7 @@ def _bgr_to_pix(bgr) -> QPixmap:
 class HistoryStrip(QFrame):
     """Horizontal thumbnail strip showing edit snapshots (newest at left)."""
 
-    snapshotChosen = Signal(int)    # index in user-facing order (0 = newest)
+    snapshotChosen = Signal(int)  # index in user-facing order (0 = newest)
 
     THUMB = QSize(96, 64)
 
@@ -50,18 +50,16 @@ class HistoryStrip(QFrame):
         self._list.setSelectionMode(QListWidget.SingleSelection)
         outer.addWidget(self._list)
 
-        self._list.itemClicked.connect(
-            lambda item: self.snapshotChosen.emit(self._list.row(item))
-        )
+        self._list.itemClicked.connect(lambda item: self.snapshotChosen.emit(self._list.row(item)))
 
     def clear(self) -> None:
         self._list.clear()
 
     def add(self, bgr, label: str = "") -> None:
         item = QListWidgetItem()
-        item.setIcon(_bgr_to_pix(bgr).scaled(
-            self.THUMB, Qt.KeepAspectRatio, Qt.SmoothTransformation
-        ))
+        item.setIcon(
+            _bgr_to_pix(bgr).scaled(self.THUMB, Qt.KeepAspectRatio, Qt.SmoothTransformation)
+        )
         if label:
             item.setText(label)
         item.setSizeHint(QSize(self.THUMB.width() + 8, self.THUMB.height() + 24))

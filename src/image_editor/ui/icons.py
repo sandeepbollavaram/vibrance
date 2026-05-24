@@ -5,15 +5,16 @@ Every icon ships in ``src/image_editor/resources/icons/`` and is loaded via
 the widget asks for. We use one neutral stroke color (#C9D2E0) so icons look
 clean both on inactive dark buttons and on accent-blue active buttons.
 """
+
 from __future__ import annotations
 
-from functools import lru_cache
+from functools import cache
 from importlib import resources
 
 from PySide6.QtGui import QIcon
 
 
-@lru_cache(maxsize=None)
+@cache
 def icon(name: str) -> QIcon:
     """Return the ``QIcon`` for ``<name>.svg`` from the bundled icons folder.
 

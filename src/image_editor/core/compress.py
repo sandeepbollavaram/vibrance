@@ -8,6 +8,7 @@ Two modes:
 All functions return ``bytes`` so callers control whether the result goes to
 disk, memory, or a network stream.
 """
+
 from __future__ import annotations
 
 from dataclasses import dataclass
@@ -32,9 +33,14 @@ def _encode(img: np.ndarray, fmt: str, quality: int) -> bytes:
     fmt = fmt.lower().lstrip(".")
     params: list[int] = []
     if fmt in ("jpg", "jpeg"):
-        params = [cv2.IMWRITE_JPEG_QUALITY, int(quality),
-                  cv2.IMWRITE_JPEG_OPTIMIZE, 1,
-                  cv2.IMWRITE_JPEG_PROGRESSIVE, 1]
+        params = [
+            cv2.IMWRITE_JPEG_QUALITY,
+            int(quality),
+            cv2.IMWRITE_JPEG_OPTIMIZE,
+            1,
+            cv2.IMWRITE_JPEG_PROGRESSIVE,
+            1,
+        ]
     elif fmt == "webp":
         params = [cv2.IMWRITE_WEBP_QUALITY, int(quality)]
     elif fmt == "png":
@@ -89,17 +95,15 @@ def compress_to_size(
         candidate = CompressionResult(data, mid, size_kb, work.shape[1], work.shape[0])
 
         if size_kb <= target_kb:
-            best = candidate     # fits — try to go higher quality
+            best = candidate  # fits — try to go higher quality
             lo = mid + 1
         else:
-            hi = mid - 1         # too big — drop quality
+            hi = mid - 1  # too big — drop quality
 
     if best is None:
         # Even the lowest quality overshot. Return that as the best effort.
         data = _encode(work, fmt, min_quality)
-        best = CompressionResult(
-            data, min_quality, len(data) / 1024, work.shape[1], work.shape[0]
-        )
+        best = CompressionResult(data, min_quality, len(data) / 1024, work.shape[1], work.shape[0])
     return best
 
 

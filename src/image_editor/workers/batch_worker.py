@@ -12,9 +12,9 @@ from image_editor.core.pipeline import process
 class BatchEditWorker(QThread):
     """Runs the edit pipeline over a list of paths off the UI thread."""
 
-    progress = Signal(int)              # 0..100
-    fileDone = Signal(str, str)         # src_path, dst_path
-    error = Signal(str, str)            # src_path, message
+    progress = Signal(int)  # 0..100
+    fileDone = Signal(str, str)  # src_path, dst_path
+    error = Signal(str, str)  # src_path, message
 
     def __init__(self, paths: list[str], params: EditParams, opts: ExportOptions):
         super().__init__()
@@ -45,7 +45,11 @@ class BatchEditWorker(QThread):
 
     def _destination(self, src: str) -> Path:
         src_path = Path(src)
-        out_dir = Path(self._opts.output_dir) if self._opts.output_dir else src_path.parent / OUTPUT_SUBDIR
+        out_dir = (
+            Path(self._opts.output_dir)
+            if self._opts.output_dir
+            else src_path.parent / OUTPUT_SUBDIR
+        )
         out_dir.mkdir(parents=True, exist_ok=True)
         ext = self._opts.format if self._opts.format else src_path.suffix.lstrip(".")
         return out_dir / f"{src_path.stem}{self._opts.suffix}.{ext}"

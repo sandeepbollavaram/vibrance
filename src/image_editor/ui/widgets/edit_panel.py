@@ -22,35 +22,35 @@ from image_editor.ui.widgets.preset_grid import PresetGrid
 from image_editor.ui.widgets.section_card import SectionCard
 from image_editor.ui.widgets.slider_row import SliderRow
 
-
 # Color presets — applied as EditParams overrides
 COLOR_PRESETS: list[tuple[str, dict]] = [
-    ("Original",       {}),
-    ("Vivid",          {"saturation": 24, "vibrance": 18, "contrast": 12}),
-    ("Warm",           {"temperature": 30, "tint": 6, "saturation": 8}),
-    ("Cool",           {"temperature": -30, "tint": -5, "saturation": 6}),
-    ("Mono",           {"saturation": -100, "contrast": 14}),
-    ("Film",           {"contrast": 18, "highlights": -12, "shadows": 12, "fade": 22, "grain": 12}),
-    ("Cyber",          {"temperature": -22, "tint": 12, "saturation": 24, "blue": 14}),
-    ("Soft",           {"contrast": -10, "saturation": -8, "fade": 18}),
-    ("Matte",          {"fade": 38, "contrast": -6, "saturation": -10}),
-    ("High Contrast",  {"contrast": 32, "clarity": 18}),
+    ("Original", {}),
+    ("Vivid", {"saturation": 24, "vibrance": 18, "contrast": 12}),
+    ("Warm", {"temperature": 30, "tint": 6, "saturation": 8}),
+    ("Cool", {"temperature": -30, "tint": -5, "saturation": 6}),
+    ("Mono", {"saturation": -100, "contrast": 14}),
+    ("Film", {"contrast": 18, "highlights": -12, "shadows": 12, "fade": 22, "grain": 12}),
+    ("Cyber", {"temperature": -22, "tint": 12, "saturation": 24, "blue": 14}),
+    ("Soft", {"contrast": -10, "saturation": -8, "fade": 18}),
+    ("Matte", {"fade": 38, "contrast": -6, "saturation": -10}),
+    ("High Contrast", {"contrast": 32, "clarity": 18}),
 ]
 
 # Effect presets
 EFFECT_PRESETS: list[tuple[str, dict]] = [
-    ("Cinematic",        {"contrast": 18, "fade": 18, "vignette": 28, "temperature": -8, "tint": -8}),
-    ("Portrait Pop",     {"clarity": 14, "vibrance": 18, "sharpness": 18, "glow": 12}),
-    ("Landscape Boost",  {"clarity": 22, "saturation": 14, "vibrance": 16, "sharpness": 22}),
-    ("Street",           {"contrast": 22, "clarity": 14, "saturation": -10, "grain": 18, "vignette": 18}),
-    ("Night",            {"shadows": 22, "blacks": 14, "blue": 10, "dehaze": 22, "glow": 14}),
-    ("Vintage",          {"saturation": -18, "tint": 8, "fade": 28, "grain": 18, "vignette": 22}),
-    ("B&&W",                 {"saturation": -100, "contrast": 18, "clarity": 12, "grain": 14}),
-    ("Soft Light",       {"highlights": -10, "glow": 18, "fade": 12, "contrast": -6}),
+    ("Cinematic", {"contrast": 18, "fade": 18, "vignette": 28, "temperature": -8, "tint": -8}),
+    ("Portrait Pop", {"clarity": 14, "vibrance": 18, "sharpness": 18, "glow": 12}),
+    ("Landscape Boost", {"clarity": 22, "saturation": 14, "vibrance": 16, "sharpness": 22}),
+    ("Street", {"contrast": 22, "clarity": 14, "saturation": -10, "grain": 18, "vignette": 18}),
+    ("Night", {"shadows": 22, "blacks": 14, "blue": 10, "dehaze": 22, "glow": 14}),
+    ("Vintage", {"saturation": -18, "tint": 8, "fade": 28, "grain": 18, "vignette": 22}),
+    ("B&&W", {"saturation": -100, "contrast": 18, "clarity": 12, "grain": 14}),
+    ("Soft Light", {"highlights": -10, "glow": 18, "fade": 12, "contrast": -6}),
 ]
 
 
 # ---------- Tabs ----------------------------------------------------
+
 
 class _AdjustTab(QWidget):
     paramsChanged = Signal()
@@ -69,8 +69,15 @@ class _AdjustTab(QWidget):
         self.shadows = SliderRow("Shadows", -100, 100, 0)
         self.whites = SliderRow("Whites", -100, 100, 0)
         self.blacks = SliderRow("Blacks", -100, 100, 0)
-        for s in (self.exposure, self.brightness, self.contrast,
-                  self.highlights, self.shadows, self.whites, self.blacks):
+        for s in (
+            self.exposure,
+            self.brightness,
+            self.contrast,
+            self.highlights,
+            self.shadows,
+            self.whites,
+            self.blacks,
+        ):
             s.valueChanged.connect(lambda _: self.paramsChanged.emit())
             basic.add(s)
         v.addWidget(basic)
@@ -145,8 +152,15 @@ class _EffectsTab(QWidget):
         self.glow = SliderRow("Glow", 0, 100, 0)
         self.bloom = SliderRow("Bloom", 0, 100, 0)
         self.fade = SliderRow("Fade", 0, 100, 0)
-        for s in (self.vignette, self.vignette_feather, self.grain,
-                  self.blur, self.glow, self.bloom, self.fade):
+        for s in (
+            self.vignette,
+            self.vignette_feather,
+            self.grain,
+            self.blur,
+            self.glow,
+            self.bloom,
+            self.fade,
+        ):
             s.valueChanged.connect(lambda _: self.paramsChanged.emit())
             eff.add(s)
         v.addWidget(eff)
@@ -178,15 +192,16 @@ class _EffectsTab(QWidget):
 
 # ---------- Right panel ---------------------------------------------
 
+
 class EditPanel(QFrame):
     """Stable right-side editing panel:
-        ┌ brand ───────────────────────────┐
-        │ Adjust  Color  Effects  Export   │  segmented tabs
-        │ ┌──────────────────────────────┐ │
-        │ │ (scrollable tab content)     │ │
-        │ └──────────────────────────────┘ │
-        │ Reset · Apply · Save             │  stable action bar
-        └──────────────────────────────────┘
+    ┌ brand ───────────────────────────┐
+    │ Adjust  Color  Effects  Export   │  segmented tabs
+    │ ┌──────────────────────────────┐ │
+    │ │ (scrollable tab content)     │ │
+    │ └──────────────────────────────┘ │
+    │ Reset · Apply · Save             │  stable action bar
+    └──────────────────────────────────┘
     """
 
     paramsChanged = Signal(EditParams)
@@ -195,7 +210,7 @@ class EditPanel(QFrame):
     resetRequested = Signal()
     rotateRequested = Signal(int)
     flipRequested = Signal(str)
-    saveCurrentRequested = Signal(object)     # ExportSettings
+    saveCurrentRequested = Signal(object)  # ExportSettings
     saveAsRequested = Signal(object)
     batchExportRequested = Signal(object)
     tabChanged = Signal(int)

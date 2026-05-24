@@ -90,12 +90,12 @@ class ZoomBar(QFrame):
 
     def _slider_to_zoom(self, v: int) -> float:
         # 0..100 -> log scale, 50 == 1.0×
-        import math
-        t = (v - 50) / 50.0          # -1..1
+        t = (v - 50) / 50.0  # -1..1
         return self.MIN if v == 0 else self.MAX if v == 100 else 10 ** (t * 1.0)
 
     def _zoom_to_slider(self, z: float) -> int:
         import math
+
         z = max(self.MIN, min(self.MAX, z))
         return int(50 + math.log10(z) * 50)
 

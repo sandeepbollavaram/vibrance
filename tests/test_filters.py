@@ -46,8 +46,17 @@ def test_rotate_90_swaps_dims(gradient):
 
 def test_apply_all_keeps_dtype_and_shape(gradient):
     params = EditParams(
-        brightness=10, contrast=10, exposure=5, highlights=20, shadows=20,
-        saturation=15, vibrance=15, temperature=10, tint=-10, blur=2, sharpness=20,
+        brightness=10,
+        contrast=10,
+        exposure=5,
+        highlights=20,
+        shadows=20,
+        saturation=15,
+        vibrance=15,
+        temperature=10,
+        tint=-10,
+        blur=2,
+        sharpness=20,
     )
     out = filters.apply_all(gradient, params)
     assert out.shape == gradient.shape
@@ -119,8 +128,13 @@ def test_spot_heal_returns_image(gradient):
 
 def test_apply_all_with_new_params(gradient):
     params = EditParams(
-        exposure=10, contrast=10, vignette=30, grain=10, noise_reduction=0,
-        grade_shadows=(0.2, 0.0), grade_highs=(-0.1, 0.05),
+        exposure=10,
+        contrast=10,
+        vignette=30,
+        grain=10,
+        noise_reduction=0,
+        grade_shadows=(0.2, 0.0),
+        grade_highs=(-0.1, 0.05),
         curve_rgb=[(0.0, 0.05), (0.5, 0.55), (1.0, 1.0)],
     )
     out = filters.apply_all(gradient, params)

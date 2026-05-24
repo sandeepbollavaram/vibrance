@@ -20,8 +20,7 @@ class Toast(QFrame):
     """Floating notification anchored to the bottom-center of its parent.
     Auto-fades after ``duration_ms``."""
 
-    def __init__(self, parent: QWidget, message: str, kind: str = "info",
-                 duration_ms: int = 2500):
+    def __init__(self, parent: QWidget, message: str, kind: str = "info", duration_ms: int = 2500):
         super().__init__(parent)
         self.setObjectName("ToastError" if kind == "error" else "Toast")
         self.setAttribute(Qt.WA_DeleteOnClose)
@@ -33,7 +32,8 @@ class Toast(QFrame):
 
         glyph = QLabel("!" if kind == "error" else "✓")
         glyph.setStyleSheet(
-            "color:#FF8FA6; font-weight:800; font-size:14px;" if kind == "error"
+            "color:#FF8FA6; font-weight:800; font-size:14px;"
+            if kind == "error"
             else "color:#5AB0FF; font-weight:800; font-size:14px;"
         )
         h.addWidget(glyph)
@@ -78,8 +78,7 @@ class Toast(QFrame):
         QTimer.singleShot(self._duration, self._anim_out.start)
 
 
-def show_toast(parent: QWidget, message: str, kind: str = "info",
-               duration_ms: int = 2500) -> Toast:
+def show_toast(parent: QWidget, message: str, kind: str = "info", duration_ms: int = 2500) -> Toast:
     t = Toast(parent, message, kind=kind, duration_ms=duration_ms)
     t.show_at_bottom()
     return t

@@ -18,6 +18,7 @@ from image_editor.config import EditParams
 
 def _bgr_to_pixmap(bgr) -> QPixmap:
     import cv2
+
     rgb = cv2.cvtColor(bgr, cv2.COLOR_BGR2RGB)
     h, w, ch = rgb.shape
     img = QImage(rgb.data, w, h, ch * w, QImage.Format_RGB888).copy()
@@ -81,15 +82,17 @@ class PresetGrid(QFrame):
         if source_bgr is None:
             return
         import cv2
+
         from image_editor.core.filters import apply_all
+
         h, w = source_bgr.shape[:2]
         scale = 80 / max(h, w)
         thumb_src = (
-            cv2.resize(source_bgr, (int(w * scale), int(h * scale)),
-                       interpolation=cv2.INTER_AREA)
-            if scale < 1.0 else source_bgr
+            cv2.resize(source_bgr, (int(w * scale), int(h * scale)), interpolation=cv2.INTER_AREA)
+            if scale < 1.0
+            else source_bgr
         )
-        for btn, (_name, overrides) in zip(self._buttons, self._presets):
+        for btn, (_name, overrides) in zip(self._buttons, self._presets, strict=False):
             params = replace(EditParams(), **overrides) if overrides else EditParams()
             try:
                 rendered = apply_all(thumb_src, params)

@@ -15,9 +15,7 @@ from image_editor.utils.logger import get_logger
 
 def _resource_path(name: str) -> str | None:
     try:
-        with resources.as_file(
-            resources.files("image_editor.resources").joinpath(name)
-        ) as p:
+        with resources.as_file(resources.files("image_editor.resources").joinpath(name)) as p:
             return str(p) if p.is_file() else None
     except (FileNotFoundError, ModuleNotFoundError):
         return None

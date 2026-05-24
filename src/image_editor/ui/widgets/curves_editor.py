@@ -8,7 +8,7 @@ from PySide6.QtWidgets import QFrame, QHBoxLayout, QLabel, QPushButton, QVBoxLay
 class _CurveCanvas(QWidget):
     """A small interactive RGB curve editor with draggable points."""
 
-    curveChanged = Signal(list)   # list[(x, y)] in 0..1
+    curveChanged = Signal(list)  # list[(x, y)] in 0..1
 
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -32,10 +32,15 @@ class _CurveCanvas(QWidget):
         self.set_points(None)
 
     # ------- geometry helpers -------
-    def _w(self) -> int: return max(self.width() - 16, 1)
-    def _h(self) -> int: return max(self.height() - 16, 1)
+    def _w(self) -> int:
+        return max(self.width() - 16, 1)
+
+    def _h(self) -> int:
+        return max(self.height() - 16, 1)
+
     def _to_px(self, p: list[float]) -> QPointF:
         return QPointF(8 + p[0] * self._w(), 8 + (1.0 - p[1]) * self._h())
+
     def _from_px(self, x: float, y: float) -> tuple[float, float]:
         nx = max(0.0, min(1.0, (x - 8) / self._w()))
         ny = max(0.0, min(1.0, 1.0 - (y - 8) / self._h()))
@@ -69,7 +74,7 @@ class _CurveCanvas(QWidget):
             p.drawLine(self._to_px(pts[i]), self._to_px(pts[i + 1]))
 
         # Control points
-        for i, pt in enumerate(pts):
+        for pt in pts:
             center = self._to_px(pt)
             p.setBrush(QColor(255, 255, 255, 240))
             p.setPen(QPen(QColor(90, 176, 255, 255), 2))
@@ -106,9 +111,7 @@ class _CurveCanvas(QWidget):
         # Keep order: don't drag past neighbors
         left = self._points[self._dragging - 1][0] if self._dragging > 0 else 0.0
         right = (
-            self._points[self._dragging + 1][0]
-            if self._dragging < len(self._points) - 1
-            else 1.0
+            self._points[self._dragging + 1][0] if self._dragging < len(self._points) - 1 else 1.0
         )
         nx = max(left + 0.001, min(right - 0.001, nx))
         self._points[self._dragging] = [nx, ny]
@@ -152,7 +155,9 @@ class CurvesEditor(QFrame):
         self._canvas = _CurveCanvas()
         v.addWidget(self._canvas)
 
-        hint = QLabel("Click empty area to add a point · right-click an interior point to remove · drag to shape")
+        hint = QLabel(
+            "Click empty area to add a point · right-click an interior point to remove · drag to shape"
+        )
         hint.setProperty("role", "caption")
         hint.setWordWrap(True)
         v.addWidget(hint)

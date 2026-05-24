@@ -26,9 +26,7 @@ class _CropCanvas(QLabel):
         self.setMouseTracking(True)
 
     def resizeEvent(self, event):  # noqa: N802
-        self._scaled = self._source.scaled(
-            self.size(), Qt.KeepAspectRatio, Qt.SmoothTransformation
-        )
+        self._scaled = self._source.scaled(self.size(), Qt.KeepAspectRatio, Qt.SmoothTransformation)
         self.setPixmap(self._scaled)
         super().resizeEvent(event)
 

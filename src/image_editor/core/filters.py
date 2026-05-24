@@ -4,6 +4,7 @@ All public functions take a BGR uint8 ``np.ndarray`` and return a BGR uint8 ``np
 Sliders use -100..100 (or 0..100 for unipolar). Internal math is float32 in 0..1 range
 where possible to avoid clipping artifacts.
 """
+
 from __future__ import annotations
 
 from pathlib import Path
@@ -13,8 +14,8 @@ import numpy as np
 
 from image_editor.config import EditParams
 
-
 # ----------------------------- helpers -----------------------------
+
 
 def _to_float(img: np.ndarray) -> np.ndarray:
     return img.astype(np.float32) / 255.0
@@ -25,6 +26,7 @@ def _to_uint8(img: np.ndarray) -> np.ndarray:
 
 
 # ----------------------------- tone -----------------------------
+
 
 def brightness_contrast(img: np.ndarray, brightness: int, contrast: int) -> np.ndarray:
     if brightness == 0 and contrast == 0:
@@ -93,13 +95,14 @@ def dehaze(img: np.ndarray, amount: int) -> np.ndarray:
     # crude airlight estimate
     blurred = cv2.GaussianBlur(f, (0, 0), sigmaX=12)
     airlight = np.percentile(blurred.reshape(-1, 3), 99.5, axis=0)
-    a = amount / 100.0 * 0.6      # cap effect
+    a = amount / 100.0 * 0.6  # cap effect
     transmission = np.clip(1.0 - a * (blurred / np.maximum(airlight, 1e-3)), 0.25, 1.0)
     out = (f - airlight) / transmission + airlight
     return _to_uint8(out)
 
 
 # ----------------------------- color -----------------------------
+
 
 def saturation_vibrance(img: np.ndarray, saturation: int, vibrance: int) -> np.ndarray:
     if saturation == 0 and vibrance == 0:
@@ -121,7 +124,7 @@ def hue_shift(img: np.ndarray, degrees: int) -> np.ndarray:
     if degrees == 0:
         return img
     hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV).astype(np.int16)
-    hsv[..., 0] = (hsv[..., 0] + int(degrees / 2)) % 180   # OpenCV H is 0..179
+    hsv[..., 0] = (hsv[..., 0] + int(degrees / 2)) % 180  # OpenCV H is 0..179
     return cv2.cvtColor(hsv.astype(np.uint8), cv2.COLOR_HSV2BGR)
 
 
@@ -143,13 +146,14 @@ def temperature_tint(img: np.ndarray, temperature: int, tint: int) -> np.ndarray
     # BGR layout: B=cool, R=warm; G shifts on tint.
     t = temperature / 200.0
     g = tint / 200.0
-    f[..., 0] = f[..., 0] - t          # B
-    f[..., 2] = f[..., 2] + t          # R
-    f[..., 1] = f[..., 1] - g          # G (negative tint = greener)
+    f[..., 0] = f[..., 0] - t  # B
+    f[..., 2] = f[..., 2] + t  # R
+    f[..., 1] = f[..., 1] - g  # G (negative tint = greener)
     return _to_uint8(f)
 
 
 # ----------------------------- detail -----------------------------
+
 
 def gaussian_blur(img: np.ndarray, amount: int) -> np.ndarray:
     if amount <= 0:
@@ -168,6 +172,7 @@ def unsharp_sharpen(img: np.ndarray, amount: int) -> np.ndarray:
 
 # ----------------------------- geometry -----------------------------
 
+
 def rotate_flip(img: np.ndarray, rotate: int, flip_h: bool, flip_v: bool) -> np.ndarray:
     out = img
     if rotate == 90:
@@ -184,6 +189,7 @@ def rotate_flip(img: np.ndarray, rotate: int, flip_h: bool, flip_v: bool) -> np.
 
 
 # ----------------------------- LUT -----------------------------
+
 
 def apply_cube_lut(img: np.ndarray, lut_path: str) -> np.ndarray:
     p = Path(lut_path)
@@ -213,7 +219,7 @@ def _parse_cube_lut(path: Path) -> np.ndarray | None:
                 rows.append((float(parts[0]), float(parts[1]), float(parts[2])))
     except Exception:
         return None
-    if not size or len(rows) != size ** 3:
+    if not size or len(rows) != size**3:
         return None
     arr = np.array(rows, dtype=np.float32).reshape(size, size, size, 3)
     return arr  # axes: r, g, b (cube convention)
@@ -257,6 +263,7 @@ def _apply_3d_lut(img_bgr: np.ndarray, lut: np.ndarray) -> np.ndarray:
 
 # ----------------------------- effects -----------------------------
 
+
 def vignette(img: np.ndarray, amount: int, feather: int = 50) -> np.ndarray:
     """Radial darken (positive amount) or brighten (negative) toward edges."""
     if amount == 0:
@@ -268,7 +275,7 @@ def vignette(img: np.ndarray, amount: int, feather: int = 50) -> np.ndarray:
     f = max(0.05, feather / 100.0)
     mask = np.clip((dist - (1.0 - f)) / f, 0.0, 1.0)
     strength = amount / 100.0
-    factor = 1.0 - mask * strength       # >1 brightens, <1 darkens
+    factor = 1.0 - mask * strength  # >1 brightens, <1 darkens
     out = img.astype(np.float32) * factor[..., None]
     return np.clip(out, 0, 255).astype(np.uint8)
 
@@ -311,7 +318,7 @@ def bloom(img: np.ndarray, amount: int) -> np.ndarray:
     highlights = f * mask
     halo = cv2.GaussianBlur(highlights, (0, 0), sigmaX=18)
     a = amount / 100.0 * 0.8
-    out = 1.0 - (1.0 - f) * (1.0 - halo * a)    # screen blend
+    out = 1.0 - (1.0 - f) * (1.0 - halo * a)  # screen blend
     return _to_uint8(out)
 
 
@@ -320,7 +327,7 @@ def fade(img: np.ndarray, amount: int) -> np.ndarray:
     if amount <= 0:
         return img
     a = amount / 100.0
-    lift = 0.18 * a     # how high blacks rise (0..1)
+    lift = 0.18 * a  # how high blacks rise (0..1)
     f = _to_float(img)
     out = f * (1.0 - lift) + lift
     return _to_uint8(out)
@@ -379,6 +386,7 @@ def apply_curve(img: np.ndarray, points: list[tuple[float, float]] | None) -> np
 
 # ----------------------------- pipeline -----------------------------
 
+
 def apply_all(img: np.ndarray, p: EditParams) -> np.ndarray:
     """Apply every parameter in canonical order:
     geometry -> light -> tone -> color -> grading -> curves -> detail -> effects -> LUT."""
@@ -424,6 +432,7 @@ def apply_all(img: np.ndarray, p: EditParams) -> np.ndarray:
 
 # ----------------------------- spot heal -----------------------------
 
+
 def spot_heal(img: np.ndarray, mask: np.ndarray, radius: int = 6) -> np.ndarray:
     """Classical inpainting (Telea). ``mask`` is a uint8 array where >0 marks
     pixels to repair. Not ML — just neighborhood interpolation."""
@@ -435,6 +444,7 @@ def spot_heal(img: np.ndarray, mask: np.ndarray, radius: int = 6) -> np.ndarray:
 
 
 # ----------------------------- histogram -----------------------------
+
 
 def histogram(img: np.ndarray) -> dict[str, np.ndarray]:
     """Return per-channel + luminance histograms (256 bins, int32)."""

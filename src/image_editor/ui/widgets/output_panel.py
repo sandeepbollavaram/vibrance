@@ -68,7 +68,9 @@ class OutputPanel(QFrame):
 
     def add_output(self, path: str) -> None:
         from pathlib import Path
+
         from PySide6.QtWidgets import QListWidgetItem
+
         item = QListWidgetItem(Path(path).name)
         item.setData(0x0100, path)
         self.output_list.addItem(item)

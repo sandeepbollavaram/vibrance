@@ -77,7 +77,7 @@ class DropZone(QFrame):
                 return True
         return False
 
-    def dragEnterEvent(self, e: QDragEnterEvent) -> None:   # noqa: N802
+    def dragEnterEvent(self, e: QDragEnterEvent) -> None:  # noqa: N802
         if e.mimeData().hasUrls() and self._accept(e.mimeData().urls()):
             self.setObjectName("DropZoneActive")
             self._refresh_style()
@@ -85,11 +85,11 @@ class DropZone(QFrame):
         else:
             e.ignore()
 
-    def dragLeaveEvent(self, e: QDragLeaveEvent) -> None:   # noqa: N802
+    def dragLeaveEvent(self, e: QDragLeaveEvent) -> None:  # noqa: N802
         self.setObjectName("DropZone")
         self._refresh_style()
 
-    def dropEvent(self, e: QDropEvent) -> None:   # noqa: N802
+    def dropEvent(self, e: QDropEvent) -> None:  # noqa: N802
         self.setObjectName("DropZone")
         self._refresh_style()
         for u in e.mimeData().urls():
