@@ -1,0 +1,4 @@
+title: Vibrance
+description: Production-grade desktop photo editor with smart compression.
+theme: null
+include: ["app.png", "app.ico", "downloads.js", "style.css", "hero.png", "og.png"]

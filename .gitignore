@@ -1,19 +1,47 @@
 # Virtual environment
 venv/
+.venv/
+env/
 
 # PyInstaller build files
 build/
 dist/
 *.spec
 
-# Python cache files
+# Python cache & build
 __pycache__/
 *.pyc
 *.pyo
+*.egg-info/
+.eggs/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
 
-# Log files
+# Local logs & app data
 logs.txt
+*.log
+logs/
 
 # OS files
 .DS_Store
 Thumbs.db
+
+# Kairo / Claude session memory
+.kairo/
+memory/
+
+# Local launch logs from dev runs
+launch_err.log
+launch_out.log
+web_preview.png
+screenshot_launch.png
+
+# IDE
+.vscode/
+.idea/
+*.swp
+
+# Local secrets / MCP config
+.mcp.json
+.env

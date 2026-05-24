@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Vibrance — Photo editor, batch processor, compressor</title>
+  <meta name="description" content="Vibrance is a production-grade offline desktop photo editor with batch editing, smart compression, color grading wheels, curves, presets, and LUTs. Free, open source, Windows installer." />
+
+  <!-- Open Graph / social card -->
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Vibrance — Photo editor, batch processor, compressor" />
+  <meta property="og:description" content="Free offline desktop photo editor for Windows. Batch edits, smart compression, color grading, before/after compare." />
+  <meta property="og:image" content="og.png" />
+  <meta property="og:image:width" content="2848" />
+  <meta property="og:image:height" content="1504" />
+  <meta property="og:url" content="https://sandeepbollavaram.github.io/image_editor_python/" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:image" content="og.png" />
+  <meta name="theme-color" content="#0A0E1A" />
+
+  <link rel="icon" type="image/png" href="app.png" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="nav">
+    <a class="brand" href="./">
+      <img src="app.png" alt="" width="28" height="28" />
+      <span>Vibrance</span>
+    </a>
+    <nav>
+      <a href="#features">Features</a>
+      <a href="#download">Download</a>
+      <a href="https://github.com/sandeepbollavaram/image_editor_python" target="_blank" rel="noopener">GitHub →</a>
+    </nav>
+  </header>
+
+  <section class="hero">
+    <div class="hero-bg-glow" aria-hidden="true"></div>
+    <div class="hero-grid">
+      <div class="hero-copy">
+        <div class="badge">v<span id="latest-version">1.0.0</span> · Windows · Free &amp; offline</div>
+        <h1>Edit photos.<br/><span class="accent">Compress in one click.</span></h1>
+        <p class="lede">
+          A production-grade desktop image editor.
+          Batch edits across folders, real-time before/after compare,
+          smart file-size compression, LUTs, presets &mdash; all in a modern dark UI.
+        </p>
+        <ul class="bullets">
+          <li><span class="dot" aria-hidden="true"></span> 11 adjustments + 3-way color grading wheels + curves</li>
+          <li><span class="dot" aria-hidden="true"></span> Smart target-size JPEG / WebP compression</li>
+          <li><span class="dot" aria-hidden="true"></span> Batch a whole folder &mdash; UI never freezes</li>
+          <li><span class="dot" aria-hidden="true"></span> 12 curated film looks &middot; presets &middot; <code>.cube</code> LUTs</li>
+        </ul>
+        <div class="cta">
+          <a id="download-primary" class="btn btn-primary" href="https://github.com/sandeepbollavaram/image_editor_python/releases/latest" data-event="download">
+            <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false"><path fill="currentColor" d="M5 20h14v-2H5v2zm7-18l-5.5 5.5L8 9l3-3v9h2V6l3 3 1.5-1.5L12 2z"/></svg>
+            Download for Windows
+          </a>
+          <a class="btn btn-ghost" href="https://github.com/sandeepbollavaram/image_editor_python/releases" target="_blank" rel="noopener">All releases</a>
+        </div>
+        <p class="meta" id="release-meta">Fetching latest release&hellip;</p>
+      </div>
+      <div class="hero-art">
+        <div class="hero-art-halo" aria-hidden="true"></div>
+        <img src="hero.png" alt="Vibrance app showing color-graded photo, sliders, color wheel, and film-look swatches" loading="eager" />
+      </div>
+    </div>
+  </section>
+
+  <section id="features" class="features">
+    <h2>What's inside</h2>
+    <div class="grid">
+      <article class="card">
+        <h3>Batch editing</h3>
+        <p>Apply your edit pipeline to a whole folder. Runs off the UI thread — drag a hundred files in, keep working.</p>
+      </article>
+      <article class="card">
+        <h3>Smart compression</h3>
+        <p>Target a file size in KB. Vibrance binary-searches encoder quality until your image lands at or under the limit. Strips EXIF on request.</p>
+      </article>
+      <article class="card">
+        <h3>Before / after compare</h3>
+        <p>Draggable split view with labeled handles. See exactly what changed.</p>
+      </article>
+      <article class="card">
+        <h3>11 adjustments</h3>
+        <p>Exposure · Brightness · Contrast · Highlights · Shadows · Saturation · Vibrance · Temperature · Tint · Blur · Sharpen — with reset on every slider.</p>
+      </article>
+      <article class="card">
+        <h3>Presets &amp; LUTs</h3>
+        <p>Save any look as a preset. Drop in a <code>.cube</code> 3D LUT and apply it across a folder.</p>
+      </article>
+      <article class="card">
+        <h3>Built for keyboards</h3>
+        <p>Undo/redo, Apply, Fit, Compare, Export — all shortcuts. Live histogram updates as you drag.</p>
+      </article>
+    </div>
+  </section>
+
+  <section id="download" class="download">
+    <h2>Get Vibrance</h2>
+    <div class="dl-grid">
+      <div class="dl-card">
+        <h3>Installer</h3>
+        <p class="muted">Recommended. Adds a Desktop shortcut, Start Menu entry, and "Open with Vibrance" for image files.</p>
+        <a id="download-installer" class="btn btn-primary block" href="https://github.com/sandeepbollavaram/image_editor_python/releases/latest">Download installer</a>
+        <p class="meta" id="installer-meta"></p>
+      </div>
+      <div class="dl-card">
+        <h3>Portable</h3>
+        <p class="muted">Single <code>Vibrance.exe</code>. No install, no admin. Stash it on a USB drive.</p>
+        <a id="download-portable" class="btn btn-ghost block" href="https://github.com/sandeepbollavaram/image_editor_python/releases/latest">Download portable</a>
+        <p class="meta" id="portable-meta"></p>
+      </div>
+      <div class="dl-card">
+        <h3>From source</h3>
+        <p class="muted">macOS / Linux or hacking on the code? Run from source.</p>
+        <pre><code>git clone https://github.com/sandeepbollavaram/image_editor_python.git
+cd image_editor_python
+python -m venv .venv
+.venv\Scripts\activate
+pip install -r requirements.txt
+python -m image_editor</code></pre>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <p>
+      MIT licensed · Built with PySide6 + OpenCV ·
+      <a href="https://github.com/sandeepbollavaram/image_editor_python" target="_blank" rel="noopener">Source on GitHub</a>
+    </p>
+    <p class="muted">© Sandeep Bollavaram</p>
+  </footer>
+
+  <script src="downloads.js"></script>
+</body>
+</html>

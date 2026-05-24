@@ -1,0 +1,73 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "vibrance"
+version = "1.0.0"
+description = "Vibrance — production-grade desktop image editor with batch editing, smart compression, live preview, and before/after comparison."
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+authors = [{ name = "Sandeep Bollavaram" }]
+keywords = ["image", "editor", "pyside6", "opencv", "photography"]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Environment :: X11 Applications :: Qt",
+    "Intended Audience :: End Users/Desktop",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Multimedia :: Graphics :: Editors",
+]
+dependencies = [
+    "PySide6>=6.6,<7",
+    "opencv-python>=4.9,<5",
+    "numpy>=1.26,<3",
+    "Pillow>=10.0,<12",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8",
+    "pytest-qt>=4.4",
+    "ruff>=0.5",
+    "black>=24",
+    "pyinstaller>=6.6",
+]
+
+[project.scripts]
+vibrance = "image_editor.app:main"
+
+[project.gui-scripts]
+vibrance-gui = "image_editor.app:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+image_editor = [
+    "resources/*.qss",
+    "resources/*.ico",
+    "resources/*.png",
+    "resources/icons/*.svg",
+    "resources/icons/__init__.py",
+]
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "UP", "B", "SIM"]
+ignore = ["E501"]
+
+[tool.black]
+line-length = 100
+target-version = ["py310"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra"

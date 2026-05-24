@@ -1,0 +1,115 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*.*.*"
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Version (e.g. 1.0.0)"
+        required: true
+        default: "1.0.0"
+
+permissions:
+  contents: write
+
+jobs:
+  build-windows:
+    name: Build Windows installer
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Resolve version
+        id: ver
+        shell: bash
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "version=${{ github.event.inputs.version }}" >> "$GITHUB_OUTPUT"
+          else
+            echo "version=${GITHUB_REF_NAME#v}" >> "$GITHUB_OUTPUT"
+          fi
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Install build deps
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements-dev.txt
+
+      - name: Generate placeholder icon if missing
+        shell: pwsh
+        run: |
+          if (-not (Test-Path src\image_editor\resources\app.ico)) {
+            python scripts\make_icon.py
+          }
+
+      - name: Build EXE with PyInstaller
+        shell: pwsh
+        run: |
+          python -m PyInstaller --noconsole --onefile --clean `
+            --name Vibrance `
+            --icon src\image_editor\resources\app.ico `
+            --add-data "src\image_editor\resources;image_editor\resources" `
+            -p src `
+            src\image_editor\__main__.py
+
+      - name: Install Inno Setup
+        run: choco install innosetup -y --no-progress
+
+      - name: Compile installer
+        shell: pwsh
+        run: |
+          & "C:\Program Files (x86)\Inno Setup 6\iscc.exe" `
+            /DMyAppVersion=${{ steps.ver.outputs.version }} `
+            installer.iss
+
+      - name: Hash artifact
+        id: hash
+        shell: pwsh
+        run: |
+          $f = "dist\Vibrance_Setup_${{ steps.ver.outputs.version }}.exe"
+          $h = (Get-FileHash $f -Algorithm SHA256).Hash
+          "$h  $(Split-Path $f -Leaf)" | Out-File "dist\SHA256SUMS.txt" -Encoding ascii
+          "sha256=$h" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: Vibrance-${{ steps.ver.outputs.version }}-windows
+          path: |
+            dist/Vibrance_Setup_${{ steps.ver.outputs.version }}.exe
+            dist/Vibrance.exe
+            dist/SHA256SUMS.txt
+
+      - name: Create GitHub Release
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@v2
+        with:
+          name: Vibrance ${{ steps.ver.outputs.version }}
+          generate_release_notes: true
+          files: |
+            dist/Vibrance_Setup_${{ steps.ver.outputs.version }}.exe
+            dist/Vibrance.exe
+            dist/SHA256SUMS.txt
+          body: |
+            ## Vibrance ${{ steps.ver.outputs.version }}
+
+            **One-click download:** https://sandeepbollavaram.github.io/image_editor_python/
+
+            ### Installation (Windows)
+            1. Download `Vibrance_Setup_${{ steps.ver.outputs.version }}.exe` below.
+            2. Run it — it installs to `Program Files`, creates a **Desktop shortcut** and a **Start Menu** entry, and registers Vibrance as an "Open with…" option for common image formats.
+            3. Launch from your desktop.
+
+            ### Verify
+            ```
+            SHA-256: ${{ steps.hash.outputs.sha256 }}
+            ```
+
+            ### Portable
+            `Vibrance.exe` is also attached as a single-file portable build — no install required.
